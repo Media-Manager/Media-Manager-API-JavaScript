@@ -21,22 +21,22 @@ mediamanager = global.mediamanager != null ? mediamanager: {};
  * @type {object}
  */
 mockVars = {
-    template: "55cdea6f140ba095488b4581",
-    video: "55e5c930150ba085738b456b",
-    audio: "55e5c930150ba085738b456b",
-    playlist: "55e07803140ba06c7e8b4574",
+    template: random.string(),
+    video: random.string(),
+    audio: random.string(),
+    playlist: random.string(),
     filters: {
-        perPage: 5,
-        advanced_tags: "fund_manager=apples"
+        perPage: random.number(),
+        advanced_tags: random.advancedTags()
     }
 };
 
 /**
-* Set the shortname for a client.
-*
-* @param {string} client Shortname for client.
-* @return {undefined}
-*/
+ * Set the shortname for a client.
+ *
+ * @param {string} client Shortname for client.
+ * @return {undefined}
+ */
 mediamanager.client = function (client) {
     this.sn = client;
 };
@@ -93,7 +93,7 @@ mediamanager.external.util.request = function (url, onComplete, params) {
     // videos in template
     apis.push({
         url: baseURL + "/template/" + template + "/videos",
-         response: {}
+        response: {}
     });
     // audio in templatparams);
     apis.push({

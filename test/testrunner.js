@@ -18,7 +18,7 @@ describe("#mediamanager.client(string)", function () {
 
     it("Should set the client short name of the global mediamanager object", function () {
 
-        var client = "demo";
+        var client = random.string();
         mediamanager.external.client( client );
 
         chai.expect( mediamanager.sn ).to.equal( client );
