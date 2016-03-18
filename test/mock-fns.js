@@ -6,11 +6,99 @@
  */
 
 var R = require("ramda");
+var md5 = require("md5");
 require("../dist/mediamanager-external-library.js");
 require("./mock-utils.js");
 
 // DEFINE IF NOT EXISTENT
 mediamanager = global.mediamanager != null ? mediamanager: {};
+
+/**
+ * Functions to generate
+ * random data types.
+ *
+ * @type {object}
+ */
+random = {
+    /**
+     * Generate a random string
+     *
+     * @return {string}
+     */
+    string: function () {
+        return md5(Date.now() * random.number(10));
+    },
+    /**
+     * Generate a random number.
+     *
+     * @param {number} n Range for randomisation from 0 to n.
+     * @return {number}
+     */
+    number: function (n) {
+        return Math.floor(Math.random() * (n || 100));
+    },
+    /**
+     * Generate a random boolean.
+     *
+     * @return {boolean} 
+     */
+    bool: function () {
+        return Math.round(Math.random()) == true; // turns it into a boolean
+    },
+    /**
+     * Randomly return a string
+     * of the random object.
+     * 
+     * @return {string} Type of random data.
+     */
+    type: function () {
+
+        var cleaned = R.omit(['array', 'type'], random);
+        var keys = Object.keys(cleaned);
+        var randomIndex = random.number( keys.length - 1 );
+
+        return keys[ randomIndex ];
+    },
+    /**
+     * Generate random array
+     * with items of a given type.
+     *
+     * Acceptable types are 'string', 'number',
+     * and 'bool'.
+     *
+     * @param {string} type Type of item.
+     * @return {array} 
+     */
+    array: function (type) {
+
+        var randArray = R.range(0, random.number(10));
+
+        return R.map(function (item) {
+            return random[ type || random.type() ]();
+        }, randArray);
+    },
+    /**
+     * Generate a random 
+     * object with random string
+     * keys and random values.
+     * Type of values can be optionally enforced.
+     *
+     * @param {string} type Type of items.
+     * @return {undefined}
+     */
+    object: function () {
+
+        var randKeys = random.array('string');
+        var randPairs = R.map(function (key) {
+
+            var randomValue = random[ random.type() ]();
+
+            return [key, randomValue];
+        }, randKeys);
+
+        return R.fromPairs(randPairs);
+    }
+};
 
 /**
  * Variables used for mock 
@@ -21,8 +109,8 @@ mediamanager = global.mediamanager != null ? mediamanager: {};
  * @type {object}
  */
 mockVars = {
-    template: "55cdea6f140ba095488b4581",
-    video: "55e5c930150ba085738b456b",
+    template: random.string(),
+    video: random.string(),
     audio: "55e5c930150ba085738b456b",
     playlist: "55e07803140ba06c7e8b4574",
     filters: {
@@ -32,11 +120,11 @@ mockVars = {
 };
 
 /**
-* Set the shortname for a client.
-*
-* @param {string} client Shortname for client.
-* @return {undefined}
-*/
+ * Set the shortname for a client.
+ *
+ * @param {string} client Shortname for client.
+ * @return {undefined}
+ */
 mediamanager.client = function (client) {
     this.sn = client;
 };
@@ -93,7 +181,7 @@ mediamanager.external.util.request = function (url, onComplete, params) {
     // videos in template
     apis.push({
         url: baseURL + "/template/" + template + "/videos",
-         response: {}
+        response: {}
     });
     // audio in templatparams);
     apis.push({
