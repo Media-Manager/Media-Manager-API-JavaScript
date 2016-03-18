@@ -173,8 +173,9 @@ random = {
         var cleaned = R.omit(ommitTypes, random);
         var keys = Object.keys(cleaned);
         var randomIndex = random.number( keys.length - 1 );
+        var randomKey = keys[ randomIndex ];
 
-        return keys[ randomIndex ];
+        return randomKey;
     },
     /**
      * Generate random array
@@ -191,7 +192,7 @@ random = {
         var randArray = R.range(0, random.number(10));
 
         return R.map(function (item) {
-            return random[ type || random.type(['array', 'object']) ]();
+            return random[ type || random.type(['array', 'object', 'query', 'advancedTags']) ]();
         }, randArray);
     },
     /**
@@ -208,7 +209,8 @@ random = {
         var randKeys = random.array('string');
         var randPairs = R.map(function (key) {
 
-            var randomValue = random[ random.type() ]();
+            var randomType = random.type(['array', 'object', 'query', 'advancedTags']);
+            var randomValue = random[ randomType ]();
 
             return [key, randomValue];
         }, randKeys);
@@ -223,7 +225,7 @@ random = {
     query: function () {
         var randomRange = R.range(0, random.number(10));
         var queryList = R.map(function (n) {
-            return random.string() + "=" + random.string()
+            return random.string() + "=" + random[ random.type(['object', 'array', 'query', 'advancedTags']) ]()
         }, randomRange);
 
         return R.join("&", queryList);

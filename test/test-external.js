@@ -13,17 +13,6 @@ describe("#mediamanager.external.create( object )", function () {
 
     it("Should create an instance with prototype of mediamanager.external", function () {
 
-        /*
-        var spec = {
-            name: "Daniel",
-            age: 24,
-            interests: [
-                "Turtles",
-                "Zombies",
-                "Bird-watching"
-            ]
-        };
-       */
         var spec = random.object();
         var result = mediamanager.external.create( spec );
         var resultProto = Object.getPrototypeOf( result );
@@ -45,10 +34,7 @@ describe("#mediamanager.external.create( object )", function () {
 
 describe("#mediamanager.external.addFilter(string, mixed)", function () {
 
-    var filters = {
-        perPage: 5,
-        primate: "Homo sapien"
-    };
+    var filters = random.object();
 
     it("Should return a new instance of the external object with the given filters", function () {
 
@@ -58,15 +44,10 @@ describe("#mediamanager.external.addFilter(string, mixed)", function () {
         chai.expect( result ).to.not.equal( expected );
     });
 
-    /*
-     * Tests for each filter!
-     */
-    Object.keys(filters).forEach(function (key) {
+    it("Should add all filters", function () {
+        Object.keys(filters).forEach(function (key) {
 
-        var value = filters[key];
-
-        it("Should add the given filter", function () {
-
+            var value = filters[key];
             var result = mediamanager.external.addFilter(key, value).globalFilters[ key ];
             var expected = value;
 

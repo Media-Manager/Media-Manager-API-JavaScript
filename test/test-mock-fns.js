@@ -12,7 +12,7 @@ describe("#mediamanager.client(string)", function () {
 
     it("Should set the short name of the mediamanager object", function () {
 
-        var shortname = "apples";
+        var shortname = random.string();
         mediamanager.client( shortname );
 
         chai.expect( mediamanager.sn ).to.equal( shortname );
@@ -55,16 +55,9 @@ describe("#mediamanager.external.util.request(string, function[, object])", func
 
 describe("#parseGetParams(string)", function () {
 
-    var normalTestString = "first=daniel&last=stuessy&age=24&interests=apples,monkeys,pears&monkeys=&mane";
+    var normalTestString = random.query();
     var abnormalTestString= "?" + normalTestString;
-    var testObject = {
-        first: "daniel",
-        last: "stuessy",
-        age: "24",
-        interests: "apples,monkeys,pears",
-        monkeys: "",
-        mane: ""
-    };
+    var testObject = parseGetParams(normalTestString);
 
     it("Should parse a string of GET parameters without '?' correctly", function () {
 
@@ -94,14 +87,8 @@ describe("#parseGetParams(string)", function () {
 
 describe("#addGetParams(string, object)", function () {
 
-    var newParams = {
-        awesomeness: "important",
-        bees: "vital"
-    };
-    var oldParams = {
-        winter: "coming",
-        farts: "smelly"
-    };
+    var newParams = random.object();
+    var oldParams = random.object();
     var oldParamString = mediamanager.external.util.serialize( oldParams );
     var newParamString = mediamanager.external.util.serialize( newParams );
     var url = "https://example.com/apples/are/cool?" + oldParamString;
