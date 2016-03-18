@@ -4,6 +4,7 @@
  */
 
 var R = require("ramda");
+var md5 = require("md5");
 var chai = require("chai");
 require("../dist/mediamanager-external-library.js");
 
@@ -125,4 +126,121 @@ setupApiTests = function (mmObject, apiTests, defaultTestArgs) {
             });
         });
     });
+};
+
+/**
+ * Functions to generate
+ * random data types.
+ *
+ * @type {object}
+ */
+random = {
+    /**
+     * Generate a random string
+     *
+     * @return {string}
+     */
+    string: function () {
+        return md5(Date.now() * random.number(10));
+    },
+    /**
+     * Generate a random number.
+     *
+     * @param {number} n Range for randomisation from 0 to n.
+     * @return {number}
+     */
+    number: function (n) {
+        return Math.floor(Math.random() * (n || 100));
+    },
+    /**
+     * Generate a random boolean.
+     *
+     * @return {boolean} 
+     */
+    bool: function () {
+        return Math.round(Math.random()) == true; // turns it into a boolean
+    },
+    /**
+     * Randomly return a string
+     * of the random object.
+     * 
+     * @param {array} omit Types to be omitted.
+     * @return {string} Type of random data.
+     */
+    type: function (omit) {
+
+        var ommitTypes = R.append('type', omit);
+        var cleaned = R.omit(ommitTypes, random);
+        var keys = Object.keys(cleaned);
+        var randomIndex = random.number( keys.length - 1 );
+
+        return keys[ randomIndex ];
+    },
+    /**
+     * Generate random array
+     * with items of a given type.
+     *
+     * Acceptable types are 'string', 'number',
+     * and 'bool'.
+     *
+     * @param {string} type Type of item.
+     * @return {array} 
+     */
+    array: function (type) {
+
+        var randArray = R.range(0, random.number(10));
+
+        return R.map(function (item) {
+            return random[ type || random.type(['array', 'object']) ]();
+        }, randArray);
+    },
+    /**
+     * Generate a random 
+     * object with random string
+     * keys and random values.
+     * Type of values can be optionally enforced.
+     *
+     * @param {string} type Type of items.
+     * @return {undefined}
+     */
+    object: function () {
+
+        var randKeys = random.array('string');
+        var randPairs = R.map(function (key) {
+
+            var randomValue = random[ random.type() ]();
+
+            return [key, randomValue];
+        }, randKeys);
+
+        return R.fromPairs(randPairs);
+    },
+    /**
+     * Generate a random query string.
+     *
+     * @return {string} Random query string of GET params.
+     */
+    query: function () {
+        var randomRange = R.range(0, random.number(10));
+        var queryList = R.map(function (n) {
+            return random.string() + "=" + random.string()
+        }, randomRange);
+
+        return R.join("&", queryList);
+    },
+    /**
+     * Generate a string of
+     * random advanced tags.
+     *
+     * @return {string} Random string of advanced tags for a query.
+     */
+    advancedTags: function () {
+
+        var randomRange = R.range(0, random.number(10));
+        var advancedTagsList = R.map(function (n) {
+            return random.string() + "=" + random.string()
+        }, randomRange);
+
+        return R.join(";", advancedTagsList);
+    }
 };
