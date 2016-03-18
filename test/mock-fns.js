@@ -49,11 +49,13 @@ random = {
      * Randomly return a string
      * of the random object.
      * 
+     * @param {array} omit Types to be omitted.
      * @return {string} Type of random data.
      */
-    type: function () {
+    type: function (omit) {
 
-        var cleaned = R.omit(['array', 'type'], random);
+        var ommitTypes = R.append('type', omit);
+        var cleaned = R.omit(ommitTypes, random);
         var keys = Object.keys(cleaned);
         var randomIndex = random.number( keys.length - 1 );
 
@@ -74,7 +76,7 @@ random = {
         var randArray = R.range(0, random.number(10));
 
         return R.map(function (item) {
-            return random[ type || random.type() ]();
+            return random[ type || random.type(['array', 'object']) ]();
         }, randArray);
     },
     /**
