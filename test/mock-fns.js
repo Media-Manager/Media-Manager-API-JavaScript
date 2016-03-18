@@ -97,6 +97,21 @@ random = {
         }, randKeys);
 
         return R.fromPairs(randPairs);
+    },
+    /**
+     * Generate a string of
+     * random advanced tags.
+     *
+     * @return {string} Random string of advanced tags for a query.
+     */
+    advancedTags: function () {
+
+        var randomRange = R.range(0, random.number(10));
+        var advancedTagsList = R.map(function (n) {
+            return random.string() + "=" + random.string()
+        }, randomRange);
+
+        return R.join(";", advancedTagsList);
     }
 };
 
@@ -111,11 +126,11 @@ random = {
 mockVars = {
     template: random.string(),
     video: random.string(),
-    audio: "55e5c930150ba085738b456b",
-    playlist: "55e07803140ba06c7e8b4574",
+    audio: random.string(),
+    playlist: random.string(),
     filters: {
-        perPage: 5,
-        advanced_tags: "fund_manager=apples"
+        perPage: random.number(),
+        advanced_tags: random.advancedTags()
     }
 };
 
