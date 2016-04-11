@@ -4,7 +4,6 @@
  * object, used by the external
  * api library.
  */
-
 require("../dist/mediamanager-external-library.js");
 require("./mock-utils.js");
 
