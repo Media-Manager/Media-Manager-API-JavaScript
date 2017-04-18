@@ -5,7 +5,6 @@
  * api library.
  */
 
-var R = require("ramda");
 require("../dist/mediamanager-external-library.js");
 require("./mock-utils.js");
 
